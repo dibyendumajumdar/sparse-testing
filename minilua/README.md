@@ -13,7 +13,7 @@ The orginal code has been modified:
 ## Steps to build
 
 ```
-sparse-llvm minilua.c -o minilua.bc
+sparse-llvm minilua.c > minilua.bc
 llc minilua.bc
 gcc -o minilua minilua.s miniluav.c -lm
 ```
