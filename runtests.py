@@ -51,6 +51,15 @@ def execute_test(bc_file):
 
 
 def run_a_test(filename, results_directory):
+    """
+    Run a single test; the test will be compiled and then
+    executed. Optionally its output will be compared with expected
+    output. If test returns non zero code then it will be deemed
+    to have faled
+    :param filename: The C source file containing the test
+    :param results_directory: The directory for writing output files
+    :return: True if test passed else False
+    """
     bc_file = os.path.join(results_directory, 'out.bc')
     if not compile_a_test(filename, bc_file):
         print('Test ' + filename + ' FAILED to compile')
@@ -70,6 +79,22 @@ def run_a_test(filename, results_directory):
     print('Test ' + filename + ' OK')
     return True
 
+def run_external_test(path):
+    """
+    Executes an external test by calling run.sh in the test directory.
+    :param path: Path where the test lives
+    :return: True if successful
+    """
+    my_directory = os.getcwd()
+    os.chdir(path)
+    result = subprocess.run(['run.sh'], shell=True)
+    os.chdir(my_directory)
+    if result.returncode != 0:
+        print('Test ' + path + ' FAILED')
+        return False
+    else:
+        print('Test ' + path + ' OK')
+    return True
 
 def run_tests(test_directory, results_directory):
     # We CD to the location where the sources are as some tests
@@ -78,6 +103,12 @@ def run_tests(test_directory, results_directory):
     print('Running tests in ' + test_directory)
     if os.path.isfile('main.c'):
         result = run_a_test(os.path.join(test_directory, 'main.c'), results_directory)
+        if not result:
+            return 1, 1
+        else:
+            return 1, 0
+    if os.path.isfile('run.sh') and os.name == 'posix':
+        result = run_external_test(test_directory)
         if not result:
             return 1, 1
         else:
@@ -106,4 +137,5 @@ print('Using folder [' + temp_directory + '] for test results')
 with os.scandir(current_directory) as it:
     for entry in it:
         if not entry.name.startswith('.') and entry.is_dir():
+            os.chdir(current_directory)
             run_tests(entry.path, temp_directory)
