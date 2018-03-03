@@ -5,5 +5,5 @@ llc minilua.bc
 gcc -o minilua minilua.s miniluav.c -lm
 ./minilua hello.lua
 
-cd tests && sh tests/run.sh
-cd dynasm && sh dynasm/run.sh
+cd tests && sh ./run.sh && cd -
+cd dynasm && sh ./run.sh && cd - 

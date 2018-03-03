@@ -14,6 +14,8 @@ def compile_a_test(filename, bc_file):
     if os.path.isfile(bc_file):
         os.remove(bc_file)
     with open(bc_file, "wb") as f:
+        #result = subprocess.run(['sparse-llvm', filename, '-o', bc_file], stdout=subprocess.DEVNULL,
+        #                    stderr=subprocess.DEVNULL)
         result = subprocess.run(['sparse-llvm', filename], stdout=f,
                             stderr=subprocess.DEVNULL)
         if result.returncode == 0:
@@ -71,10 +73,10 @@ def run_a_test(filename, results_directory):
     expected_output = get_expected_output(filename)
     if expected_output and expected_output != actual_output:
         print('Test ' + filename + ' FAILED (output mismatch)')
-        print('Expected -->')
-        print(expected_output)
-        print('Actual -->')
-        print(actual_output)
+        #print('Expected -->')
+        #print(expected_output)
+        #print('Actual -->')
+        #print(actual_output)
         return False
     print('Test ' + filename + ' OK')
     return True
