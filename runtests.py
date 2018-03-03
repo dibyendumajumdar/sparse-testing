@@ -14,7 +14,7 @@ def compile_a_test(filename, bc_file):
     if os.path.isfile(bc_file):
         os.remove(bc_file)
     with open(bc_file, "wb") as f:
-        result = subprocess.run(['sparse-llvm', filename], f,
+        result = subprocess.run(['sparse-llvm', filename], stdout=f,
                             stderr=subprocess.DEVNULL)
         if result.returncode == 0:
             return True
@@ -52,7 +52,7 @@ def execute_test(bc_file):
 
 def run_a_test(filename, results_directory):
     bc_file = os.path.join(results_directory, 'out.bc')
-    if not compile_a_test(filename, bc_file)
+    if not compile_a_test(filename, bc_file):
         print('Test ' + filename + ' FAILED to compile')
         return False
     (status, actual_output) = execute_test(bc_file)
