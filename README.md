@@ -13,13 +13,8 @@ The tests are sourced from different places - see the notices within each sub-fo
 * The test driver is a Python 3.6 script and will not run with Python 2.x.
 
 ### Running tests
-Note that the test driver is not yet able to handle some of the special cases such as `minilua` test.
 To run the tests simply make sure that the pre-requisites are met and then run:
 
 ```
 python runtests.py
 ```
-
-## IMPORTANT INFORMATION
-
-The official Sparse-LLVM cannot run these tests yet. 
