@@ -44,7 +44,7 @@ def execute_test(bc_file):
     :param bc_file: The LLVM bitcode file to execute
     :return: Tuple pair - status and output
     """
-    result = subprocess.run(['lli', bc_file], universal_newlines=True, stdout=subprocess.PIPE)
+    result = subprocess.run(['lli', bc_file], universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     if result.returncode != 0:
         return False, None
     return True, result.stdout
@@ -62,10 +62,10 @@ def run_a_test(filename, results_directory):
     expected_output = get_expected_output(filename)
     if expected_output and expected_output != actual_output:
         print('Test ' + filename + ' FAILED (output mismatch)')
-        # print('Expected -->')
-        # print(expected_output)
-        # print('Actual -->')
-        # print(actual_output)
+        print('Expected -->')
+        print(expected_output)
+        print('Actual -->')
+        print(actual_output)
         return False
     print('Test ' + filename + ' OK')
     return True
@@ -76,11 +76,23 @@ def run_tests(test_directory, results_directory):
     # include other files
     os.chdir(test_directory)
     print('Running tests in ' + test_directory)
+    if os.path.isfile('main.c'):
+        result = run_a_test(os.path.join(test_directory, 'main.c'), results_directory)
+        if not result:
+            return 1, 1
+        else:
+            return 1, 0
+    count = 0
+    successes = 0
     with os.scandir(test_directory) as it:
         for entry in it:
             if not entry.name.endswith('.c') or not entry.is_file():
                 continue
-            run_a_test(entry.path, results_directory)
+            result = run_a_test(entry.path, results_directory)
+            count = count + 1
+            if result:
+                successes = successes + 1
+    return count, successes
 
 
 current_directory = os.getcwd()
