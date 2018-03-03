@@ -5,7 +5,7 @@ The test will be expanded to cover more of the tree functions.
 To run the test do something like this:
 
 ```
-sparse-llvm test.c
+sparse-llvm main.c > out.bc
 lli out.bc
 ```
 
