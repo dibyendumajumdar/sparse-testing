@@ -87,7 +87,7 @@ def run_external_test(path):
     """
     my_directory = os.getcwd()
     os.chdir(path)
-    result = subprocess.run(['run.sh'], shell=True)
+    result = subprocess.run(['/bin/bash', './run.sh'])
     os.chdir(my_directory)
     if result.returncode != 0:
         print('Test ' + path + ' FAILED')
